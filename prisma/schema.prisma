@@ -1,0 +1,42 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "sqlserver"
+}
+
+model Task {
+    id String @id @default(ulid())
+    title String @db.NVarChar(255)
+    description String? @db.NVarChar(1000)
+    completed Boolean @default(false)
+    priority String @default("medium") // low, medium, high
+
+    // Sync fields
+    version Int @default(1)
+    clientId String? @db.NVarChar(100)
+    lastSyncAt DateTime?
+
+    // Timestamps
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    deletedAt DateTime?
+
+    @@index([clientId])
+    @@index([updatedAt])
+    @@map("tasks")
+}
+
+model SyncLog {
+    id String @id @default(uuid())
+    entityType String @db.NVarChar(50)
+    entityId String @db.NVarChar(100)
+    operation String @db.NVarChar(20)
+    clientId String @db.NVarChar(100)
+    syncedAt DateTime @default(now())
+    data String @db.NVarChar(Max)
+
+    @@index([clientId, syncedAt])
+    @@map("sync_logs")
+}
