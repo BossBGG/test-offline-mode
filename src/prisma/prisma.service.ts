@@ -7,7 +7,15 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
     constructor() {
         super({
             adapter: new PrismaMssql({
-                connectionString: process.env.DATABASE_URL ?? '',
+                server: 'localhost',
+                port: 1433,
+                database: 'offline_db',
+                user: 'sa',
+                password: '9kq3XqZ52iCnMxp',
+                options: {
+                    encrypt: true,
+                    trustServerCertificate: true,
+                }
             }),
         });
     }

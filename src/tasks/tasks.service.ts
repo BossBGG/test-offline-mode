@@ -60,7 +60,9 @@ export class TasksService {
   }
 
   async remove(id: string) {
-    // Soft delete
+    // Check if task exists before soft delete
+    await this.findOne(id);
+    
     return this.prisma.task.update({
       where: { id },
       data: {
